@@ -12,12 +12,19 @@ git_dirty() {
   then
     echo ""
   else
+    m=""
     if [[ $st == "nothing to commit (working directory clean)" ]]
     then
-      echo "[%{$fg_bold[green]%}$(git_prompt_info)%{$reset_color%}]"
+      m="[%{$fg_bold[green]%}$(git_prompt_info)%{$reset_color%}"
     else
-      echo "[%{$fg_bold[red]%}$(git_prompt_info)%{$reset_color%}]"
+      m="[%{$fg_bold[red]%}$(git_prompt_info)%{$reset_color%}"
     fi
+    if [[ $(unpushed) != "" ]]
+    then
+      m+=" %{$fg_bold[magenta]%}unpushed%{$reset_color%}"
+    fi
+    m+="]"
+    echo $m
   fi
 }
 
@@ -32,12 +39,7 @@ unpushed () {
 }
 
 need_push () {
-  if [[ $(unpushed) == "" ]]
-  then
-    echo " "
-  else
-    echo " with %{$fg_bold[magenta]%}unpushed%{$reset_color%} "
-  fi
+  
 }
 
 rb_prompt(){
@@ -72,7 +74,7 @@ directory_name(){
   echo "[%{$fg_bold[cyan]%}%1/%\/%{$reset_color%}]"
 }
 
-export PROMPT=$'$(directory_name)$(git_dirty)$(need_push)› '
+export PROMPT=$'$(directory_name)$(git_dirty)› '
 set_prompt () {
   export RPROMPT="%{$fg_bold[cyan]%}$(todo)%{$reset_color%}"
 }
