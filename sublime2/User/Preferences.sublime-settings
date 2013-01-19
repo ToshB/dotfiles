@@ -1,3 +1,10 @@
 {
-  "theme": "Soda Dark.sublime-theme"
+	"color_scheme": "Packages/Color Scheme - Default/Monokai.tmTheme",
+	"font_size": 13.0,
+	"ignored_packages":
+	[
+		"Vintage",
+		"Build on Save"
+	],
+	"theme": "Soda Dark.sublime-theme"
 }
