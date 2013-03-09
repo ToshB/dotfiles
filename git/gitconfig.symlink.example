@@ -4,8 +4,8 @@
 [hub]
         protocol = https
 [user]
-	name = Torstein Bjørnstad
-	email = tosh@tosh.no
+	name = AUTHORNAME
+        email = AUTHOREMAIL
         helper = osxkeychain
 [alias]
         co = checkout
