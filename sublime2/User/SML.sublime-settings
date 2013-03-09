@@ -1,4 +1,5 @@
 {
 	"color_scheme": "Packages/User/SML/Son of Obsidion.tmTheme",
-	"tab_size": 2
+	"tab_size": 2,
+	"translate_tabs_to_spaces": true
 }
