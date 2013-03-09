@@ -2,51 +2,57 @@ autoload colors && colors
 # cheers, @ehrenmurdick
 # http://github.com/ehrenmurdick/config/blob/master/zsh/prompt.zsh
 
+if (( $+commands[git] ))
+then
+  git="$commands[git]"
+else
+  git="/usr/bin/git"
+fi
+
 git_branch() {
-  echo $(/usr/bin/git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
+  echo $($git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
 }
 
 git_dirty() {
-  st=$(/usr/bin/git status 2>/dev/null | tail -n 1)
+  st=$($git status 2>/dev/null | tail -n 1)
   if [[ $st == "" ]]
   then
     echo ""
   else
-    m=""
-    if [[ $st == "nothing to commit (working directory clean)" ]]
+    if [[ "$st" =~ ^nothing ]]
     then
-      m="[%{$fg_bold[green]%}$(git_prompt_info)%{$reset_color%}"
+      echo "on %{$fg_bold[green]%}$(git_prompt_info)%{$reset_color%}"
     else
-      m="[%{$fg_bold[red]%}$(git_prompt_info)%{$reset_color%}"
+      echo "on %{$fg_bold[red]%}$(git_prompt_info)%{$reset_color%}"
     fi
-    if [[ $(unpushed) != "" ]]
-    then
-      m+=" %{$fg_bold[magenta]%}unpushed%{$reset_color%}"
-    fi
-    m+="]"
-    echo $m
   fi
 }
 
 git_prompt_info () {
- ref=$(/usr/bin/git symbolic-ref HEAD 2>/dev/null) || return
+ ref=$($git symbolic-ref HEAD 2>/dev/null) || return
 # echo "(%{\e[0;33m%}${ref#refs/heads/}%{\e[0m%})"
  echo "${ref#refs/heads/}"
 }
 
 unpushed () {
-  /usr/bin/git cherry -v @{upstream} 2>/dev/null
+  $git cherry -v @{upstream} 2>/dev/null
 }
 
 need_push () {
-  
+  if [[ $(unpushed) == "" ]]
+  then
+    echo " "
+  else
+    echo " with %{$fg_bold[magenta]%}unpushed%{$reset_color%} "
+  fi
 }
+
 
 directory_name(){
-  echo "[%{$fg_bold[cyan]%}%1/%\/%{$reset_color%}]"
+  echo "%{$fg_bold[cyan]%}%1/%\/%{$reset_color%}"
 }
 
-export PROMPT=$'$(directory_name)$(git_dirty)› '
+export PROMPT=$'$(directory_name) $(git_dirty)$(need_push)› '
 
 precmd() {
   title "zsh" "%m" "%55<...<%~"
