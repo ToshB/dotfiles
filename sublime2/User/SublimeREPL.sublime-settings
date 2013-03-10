@@ -1,0 +1,5 @@
+{
+	"default_extend_env": {
+        "PATH": "/Users/tosh/.rvm/rubies/ruby-1.9.3-p392/bin/:/Users/tosh/.rvm/gems/ruby-1.9.3-p392/bin/:{PATH}"
+    }
+}

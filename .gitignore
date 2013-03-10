@@ -1,4 +1,4 @@
-sublime2/User/Package\ Control.sublime-settings
-git/gitconfig.symlink
-
+/git/gitconfig.symlink
 /sublime2/User/Package Control.last-run
+/sublime2/User/SublimeREPLHistory/*
+/sublime2/User/Package\ Control.sublime-settings
