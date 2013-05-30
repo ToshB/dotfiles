@@ -1,7 +1,0 @@
-{
-    "cmd": ["sml", "$file_name"],
-    "selector": "source.sml",
-    "file_regex": "(.*\\.sml):([0-9]+)\\.([0-9]+).+ Error: (.+)",
-    "path": "/usr/local/smlnj-110.75/bin:/usr/bin",
-    "working_dir": "$file_path/tests"
-}
