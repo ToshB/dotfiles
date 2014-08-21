@@ -4,12 +4,12 @@
 
 > Validate JavaScript with [JSHint](http://jshint.com)
 
-![](https://f.cloud.github.com/assets/170270/2307241/f0460f66-a2a3-11e3-9382-e8d27ceb0499.png)
+![](https://cloud.githubusercontent.com/assets/170270/3834266/54ad6b1c-1daf-11e4-9c46-98e6e4abab07.png)
 
 
 ## Install
 
-```bash
+```sh
 $ apm install jshint
 ```
 
@@ -24,6 +24,8 @@ Or Settings ➔ Packages ➔ Search for `jshint` *(install `Jshint`, not `Atom J
 - First error is displayed in the statusbar.
 - Reads your `.jshintrc` config and `jshintConfig` in package.json using the same logic as JSHint.
 - Option to only validate on save.
+- Command `Jshint: Lint` to manually lint.
+- Supports [React JSX](http://facebook.github.io/react/docs/jsx-in-depth.html). *(must be enabled in preferences)*
 
 
 ## License

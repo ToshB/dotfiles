@@ -1,7 +1,9 @@
 'use strict';
+var fs = require('fs');
 var path = require('path');
 var shjs = require('shelljs');
 var cli = require('jshint/src/cli');
+var userHome = require('user-home');
 
 // from JSHint //
 // Storage for memoized results from find file
@@ -28,9 +30,9 @@ function findFile(name, dir) {
     return findFileResults[filename];
   }
 
-  var parent = path.resolve(dir, "../");
+  var parent = path.resolve(dir, '../');
 
-  if (shjs.test("-e", filename)) {
+  if (shjs.test('-e', filename)) {
     findFileResults[filename] = filename;
     return filename;
   }
@@ -53,15 +55,16 @@ function findFile(name, dir) {
  */
 function findConfig(file) {
   var dir  = path.dirname(path.resolve(file));
-  var envs = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
-  var home = path.normalize(path.join(envs, ".jshintrc"));
+  var home = path.normalize(path.join(userHome, '.jshintrc'));
 
-  var proj = findFile(".jshintrc", dir);
-  if (proj)
+  var proj = findFile('.jshintrc', dir);
+  if (proj) {
     return proj;
+  }
 
-  if (shjs.test("-e", home))
+  if (shjs.test('-e', home)) {
     return home;
+  }
 
   return null;
 }
@@ -76,10 +79,11 @@ function findConfig(file) {
  */
 function loadNpmConfig(file) {
   var dir = path.dirname(path.resolve(file));
-  var fp  = findFile("package.json", dir);
+  var fp  = findFile('package.json', dir);
 
-  if (!fp)
+  if (!fp) {
     return null;
+  }
 
   try {
     return require(fp).jshintConfig;
@@ -89,8 +93,20 @@ function loadNpmConfig(file) {
 }
 // / //
 
+function loadConfigIfValid(filename) {
+	var strip = require('strip-json-comments');
+	try {
+		JSON.parse(strip(fs.readFileSync(filename, 'utf8')));
+		return cli.loadConfig(filename);
+	} catch (e) {
+	}
+	return {};
+}
+
 module.exports = function (file) {
-	var config = loadNpmConfig(file) || cli.loadConfig(findConfig(file));
-	delete config.dirname;
+	var config = loadNpmConfig(file) || loadConfigIfValid(findConfig(file));
+	if (config && config.dirname) {
+		delete config.dirname;
+	}
 	return config;
 };
