@@ -1,14 +1,19 @@
 'use strict';
-var _ = require('lodash');
-var Subscriber = require('emissary').Subscriber;
-var jshint = require('jshint').JSHINT;
-var jsxhint = require('jshint-jsx').JSXHINT;
-var loadConfig = require('./load-config');
+var emissary = require('emissary');
+var lazyReq = require('lazy-req')(require);
+var lodash = lazyReq('lodash');
+var jshint = lazyReq('jshint');
+var jsxhint = lazyReq('jshint-jsx');
+var reactDomPragma = require('react-dom-pragma');
+var loadConfig = lazyReq('./load-config');
 var plugin = module.exports;
-
+var _;
 var markersByEditorId = {};
+var errorsByEditorId = {};
 
-Subscriber.extend(plugin);
+emissary.Subscriber.extend(plugin);
+
+var SUPPORTED_GRAMMARS = ['source.js', 'source.jsx', 'source.js.jsx'];
 
 function getMarkersForEditor() {
 	var editor = atom.workspace.getActiveEditor();
@@ -18,6 +23,16 @@ function getMarkersForEditor() {
 	}
 
 	return {};
+}
+
+function getErrorsForEditor() {
+	var editor = atom.workspace.getActiveEditor();
+
+	if (editor && errorsByEditorId[editor.id]) {
+		return errorsByEditorId[editor.id];
+	}
+
+	return [];
 }
 
 function clearOldMarkers(errors) {
@@ -61,16 +76,24 @@ function getMarkerAtRow(row) {
 	return markersByEditorId[editor.id][row];
 }
 
-function updateStatusbar(error) {
-	if (!error) {
+function updateStatusbar() {
+	if (!atom.workspaceView.statusBar) {
 		return;
 	}
 
+	var editor = atom.workspace.getActiveEditor();
+
+	atom.workspaceView.statusBar.find('#jshint-statusbar').remove();
+
+	if (!editor || !errorsByEditorId[editor.id]) {
+		return;
+	}
+
+	var line = editor.getCursorBufferPosition().row+1;
+	var error = errorsByEditorId[editor.id][line] || _.first(_.compact(errorsByEditorId[editor.id]));
 	error = error[0];
 
-	if (atom.workspaceView.statusBar) {
-		atom.workspaceView.statusBar.appendLeft('<span id="jshint-statusbar" class="inline-block">JSHint ' + error.line + ':' + error.character + ' ' + error.reason + '</span>');
-	}
+	atom.workspaceView.statusBar.appendLeft('<span id="jshint-statusbar" class="inline-block">JSHint ' + error.line + ':' + error.character + ' ' + error.reason + '</span>');
 }
 
 function getRowForError(error) {
@@ -121,19 +144,22 @@ function lint() {
 		return;
 	}
 
-	if (['JavaScript', 'JavaScript (JSX)'].indexOf(editor.getGrammar().name) === -1) {
+	if (SUPPORTED_GRAMMARS.indexOf(editor.getGrammar().scopeName) === -1) {
 		return;
 	}
 
 	var file = editor.getUri();
-	var config = file ? loadConfig(file) : {};
+	var config = file ? loadConfig()(file) : {};
 
-	if (atom.workspaceView.statusBar) {
-		atom.workspaceView.statusBar.find('#jshint-statusbar').remove();
-	}
+	var linter = (atom.config.get('jshint.supportLintingJsx') || atom.config.get('jshint.transformJsx')) ? jsxhint().JSXHINT : jshint().JSHINT;
 
-	var linter = (atom.config.get('jshint.supportLintingJsx') || atom.config.get('jshint.transformJsx')) ? jsxhint : jshint;
-	linter(editor.getText(), config, config.globals);
+	var origCode = editor.getText();
+	var code = editor.getGrammar().scopeName === 'source.jsx' ? reactDomPragma(origCode) : origCode;
+	var pragmaWasAdded = code !== origCode;
+
+	linter(code, config, config.globals);
+
+	removeErrorsForEditorId(editor.id);
 
 	// workaround the errors array sometimes containing `null`
 	var errors = _.compact(linter.errors);
@@ -142,6 +168,10 @@ function lint() {
 		// aggregate same-line errors
 		var ret = [];
 		_.each(errors, function (el) {
+			if (pragmaWasAdded) {
+				el.line--;
+			}
+
 			var l = el.line;
 
 			if (Array.isArray(ret[l])) {
@@ -154,21 +184,29 @@ function lint() {
 				ret[l] = [el];
 			}
 		});
-		errors = _.compact(ret);
+
+		errorsByEditorId[editor.id] = ret;
 	}
 
-	displayErrors(errors);
+	displayErrors();
 }
 
-function displayErrors(errors) {
+function displayErrors() {
+	var errors = _.compact(getErrorsForEditor());
 	clearOldMarkers(errors);
-	updateStatusbar(_.first(errors));
+	updateStatusbar();
 	_.each(errors, displayError);
 }
 
 function removeMarkersForEditorId(id) {
 	if (markersByEditorId[id]) {
 		delete markersByEditorId[id];
+	}
+}
+
+function removeErrorsForEditorId(id) {
+	if (errorsByEditorId[id]) {
+		delete errorsByEditorId[id];
 	}
 }
 
@@ -184,19 +222,21 @@ function registerEvents() {
 
 		if (atom.config.get('jshint.validateOnlyOnSave')) {
 			events = 'saved';
-		} else {
-			// TODO: find a less noisy event for this
-			editor.on('scroll-top-changed', _.debounce(lint, 200));
 		}
+
+		editor.on('scroll-top-changed', _.debounce(displayErrors, 200));
 
 		plugin.subscribe(buffer, events, _.debounce(lint, 50));
 	});
 
 	atom.workspaceView.on('editor:will-be-removed', function (e, editorView) {
 		if (editorView && editorView.editor) {
+			removeErrorsForEditorId(editorView.editor.id);
 			removeMarkersForEditorId(editorView.editor.id);
 		}
 	});
+
+	atom.workspaceView.on('cursor:moved', updateStatusbar);
 }
 
 plugin.configDefaults = {
@@ -205,6 +245,7 @@ plugin.configDefaults = {
 };
 
 plugin.activate = function () {
+	_ = lodash();
 	registerEvents();
 	plugin.subscribe(atom.config.observe('jshint.validateOnlyOnSave', registerEvents));
 	atom.workspaceView.command('jshint:lint', lint);

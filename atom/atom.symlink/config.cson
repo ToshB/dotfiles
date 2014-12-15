@@ -8,17 +8,12 @@
   'userId': '728a771899b4637289db5b4054668fe9d04dbc80'
 'editor':
   'softWrap': true
-  'softWrapAtPreferredLineLength': true
-  'fontSize': 15
+  'fontSize': 13
+  'invisibles': {}
 'core':
   'themes': [
     'atom-dark-ui'
     'monokai'
-  ]
-  'ignoredNames': [
-    '.git'
-    '.svn'
-    '.DS_Store'
   ]
   'projectHome': '/Users/tosh/Code'
   'disabledPackages': [
