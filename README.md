@@ -22,6 +22,8 @@ Open a new terminal afterwards, or `exec zsh`.
 | `zsh/zshenv` | `~/.zshenv` |
 | `zsh/zshrc` | `~/.zshrc` |
 | `zsh/zprofile` | `~/.zprofile` |
+| `git/gitconfig` | `~/.gitconfig` |
+| `git/gitconfig-nrk` | `~/.gitconfig-nrk` |
 | `config/starship.toml` | `~/.config/starship.toml` |
 | `config/ghostty/config` | `~/.config/ghostty/config` |
 
@@ -50,6 +52,12 @@ curl -fsSL https://vite.plus | bash
 ```
 
 The configs here already source its env file; run `vp env doctor` to verify.
+
+## Git identity
+
+Personal by default (`tosh@tosh.no`). Repos under `~/dev/nrk` use the NRK
+address instead, via an `includeIf` in `.gitconfig`. Add another context by
+creating `git/gitconfig-<name>` and adding an `includeIf` that points at it.
 
 ## Notes
 

@@ -1,0 +1,7 @@
+[user]
+	name = Torstein Bjørnstad
+	email = tosh@tosh.no
+[init]
+	defaultBranch = main
+[includeIf "gitdir:~/dev/nrk/"]
+	path = ~/.gitconfig-nrk

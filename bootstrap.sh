@@ -31,6 +31,8 @@ LINKS=(
   "zsh/zshenv:.zshenv"
   "zsh/zshrc:.zshrc"
   "zsh/zprofile:.zprofile"
+  "git/gitconfig:.gitconfig"
+  "git/gitconfig-nrk:.gitconfig-nrk"
   "config/starship.toml:.config/starship.toml"
   "config/ghostty/config:.config/ghostty/config"
 )

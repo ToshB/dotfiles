@@ -1,0 +1,4 @@
+# Applied only to repos under ~/dev/nrk, via the includeIf in ~/.gitconfig.
+# Name, SSH key and everything else are inherited from the global config.
+[user]
+	email = torstein.bjornstad@nrk.no
