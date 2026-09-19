@@ -54,6 +54,9 @@ eval "$(starship init zsh)"
 # replaces cd with a frecency-ranked version; `cdi` for an interactive pick.
 # plain `cd /some/path` still works exactly as before.
 eval "$(zoxide init zsh --cmd cd)"
+# keep the classic zoxide names working too, for muscle memory
+alias z='cd'
+alias zi='cdi'
 
 # ---------- fzf ----------
 # ctrl-r fuzzy history | ctrl-t file picker | alt-c cd into a subdir
