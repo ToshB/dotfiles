@@ -13,3 +13,5 @@ brew "zsh-syntax-highlighting"
 cask "font-jetbrains-mono-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# JetBrains tools manager
+cask "jetbrains-toolbox"
