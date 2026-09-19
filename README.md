@@ -59,6 +59,12 @@ Personal by default (`tosh@tosh.no`). Repos under `~/dev/nrk` use the NRK
 address instead, via an `includeIf` in `.gitconfig`. Add another context by
 creating `git/gitconfig-<name>` and adding an `includeIf` that points at it.
 
+## Diffs
+
+Kaleidoscope is configured as `diff.tool` and `merge.tool`, so `git difftool`
+and `git mergetool` open it. Plain `git diff` is unchanged. The `ksdiff` CLI
+comes from the cask.
+
 ## Notes
 
 - `.zprofile` runs for login shells only, so `.zshrc` has a guarded

@@ -17,5 +17,7 @@ cask "font-jetbrains-mono-nerd-font"
 cask "ghostty"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
+# Spot and merge differences in text and image files or folders
+cask "kaleidoscope"
 # Git client focusing on power and productivity
 cask "tower"
