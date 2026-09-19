@@ -2,8 +2,6 @@
 brew "fzf"
 # GitHub command-line tool
 brew "gh"
-# Open-source, cross-platform JavaScript runtime environment
-brew "node"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Shell extension to navigate your filesystem faster
