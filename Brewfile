@@ -17,3 +17,5 @@ cask "font-jetbrains-mono-nerd-font"
 cask "ghostty"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
+# Git client focusing on power and productivity
+cask "tower"
