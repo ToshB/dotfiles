@@ -28,6 +28,7 @@ brew bundle --file="$DOTFILES/Brewfile"
 # ---------- symlinks ----------
 # repo path : path relative to $HOME
 LINKS=(
+  "zsh/zshenv:.zshenv"
   "zsh/zshrc:.zshrc"
   "zsh/zprofile:.zprofile"
   "config/starship.toml:.config/starship.toml"

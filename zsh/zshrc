@@ -68,5 +68,10 @@ export FZF_DEFAULT_OPTS="\
   --color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 source <(fzf --zsh)
 
+# ---------- vite+ ----------
+# puts the vp shims (node, npm, pnpm, yarn, bun...) on PATH, defines the `vp`
+# function wrapper, and registers completions. Must come after compinit.
+[ -f "$HOME/.config/vite-plus/env" ] && . "$HOME/.config/vite-plus/env"
+
 # syntax highlighting MUST be sourced last
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

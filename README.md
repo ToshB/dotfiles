@@ -19,6 +19,7 @@ Open a new terminal afterwards, or `exec zsh`.
 
 | Repo path | Links to |
 |---|---|
+| `zsh/zshenv` | `~/.zshenv` |
 | `zsh/zshrc` | `~/.zshrc` |
 | `zsh/zprofile` | `~/.zprofile` |
 | `config/starship.toml` | `~/.config/starship.toml` |
@@ -38,6 +39,17 @@ and `git status` picks it up.
   unchanged; type `**` before Tab for the fuzzy version.
 - **zsh-autosuggestions** — ghost text from history, → to accept.
 - **zsh-syntax-highlighting** — must stay last in `.zshrc`.
+
+## Not covered by bootstrap
+
+[Vite+](https://viteplus.dev) manages node/npm/pnpm/yarn/bun and is installed
+separately (it is not a Homebrew package):
+
+```sh
+curl -fsSL https://vite.plus | bash
+```
+
+The configs here already source its env file; run `vp env doctor` to verify.
 
 ## Notes
 

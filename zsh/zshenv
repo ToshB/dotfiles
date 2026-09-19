@@ -1,0 +1,4 @@
+# Sourced by every zsh, including non-interactive ones. This is what puts the
+# vp shims on PATH for IDEs (VS Code, Cursor) and scripts. Completions are
+# registered from .zshrc instead, since compdef does not exist yet here.
+[ -f "$HOME/.config/vite-plus/env" ] && . "$HOME/.config/vite-plus/env"
