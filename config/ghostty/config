@@ -1,0 +1,6 @@
+theme = Catppuccin Mocha
+font-family = JetBrainsMono Nerd Font Mono
+font-size = 13
+macos-option-as-alt = true
+window-save-state = always
+keybind = global:cmd+grave_accent=toggle_quick_terminal
