@@ -1,5 +1,7 @@
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# GitHub command-line tool
+brew "gh"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Shell extension to navigate your filesystem faster
